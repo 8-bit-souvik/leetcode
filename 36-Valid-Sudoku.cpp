@@ -1,51 +1,55 @@
 class Solution {
 public:
-
-    bool check(vector<vector<char>>& board, int row, int col, int c){
-        int size = board.size();
-
-        for(int i=0; i<size; i++){
-            
-            if(board[row][i] == board[row][col] && i != col){
-               cout << "x " << endl;
-                return false;
-            }
-
-            if(board[i][col] == board[row][col] && i != row){
-               cout << "y " << endl;
-               cout  << i << " " << row << " " << col << " : " << board[i][col] << " == " << board[row][col] << " == " << c << endl;
-                return false;
-            }
-
-            if(board[3*(row/3)+i/3][3*(col/3)+i%3] == board[row][col] && (3*(row/3)+i/3 != row || 3*(col/3)+i%3 != col)){
-                cout << "z " << endl;
-                return false;
-            }
-        }
-        
-        return true;
-    }
-
     bool isValidSudoku(vector<vector<char>>& board) {
-        int h_size = board.size();
-        bool validity = true;
-
-        for(int i=0; i<h_size; i++){
-            for(int j=0; j<h_size; j++){
-                if(board[i][j] == '.'){
-                    continue;
-                }
-                cout << board[i][j] << endl;
-                validity = check(board, i, j, board[i][j]);
-                if(validity == false){
-                    break;
+        vector<int> tempVec;
+        set<int> tempSet;
+        for(int i=0; i<9; i++){
+            for(int j=0; j<9; j++){
+                if(board[i][j] != '.'){
+                    tempVec.push_back(board[i][j]);
+                    tempSet.insert(board[i][j]);
                 }
             }
-            if(validity == false){
-                break;
+
+            if(tempVec.size() != tempSet.size()){
+                return false;
+            }
+            tempVec.clear();
+            tempSet.clear();
+        }
+
+        for(int i=0; i<9; i++){
+            for(int j=0; j<9; j++){
+                if(board[j][i] != '.'){
+                    tempVec.push_back(board[j][i]);
+                    tempSet.insert(board[j][i]);
+                }
+            }
+
+            if(tempVec.size() != tempSet.size()){
+                return false;
+            }
+            tempVec.clear();
+            tempSet.clear();
+        }
+
+        for(int i=0; i<=6; i=i+3){
+            for(int j=0; j<=6; j=j+3){
+                for(int k=0; k<9; k++){
+                    if(board[k/3+i][k%3+j] != '.'){
+                        tempVec.push_back(board[k/3+i][k%3+j]);
+                        tempSet.insert(board[k/3+i][k%3+j]);
+                    }
+                }
+
+                if(tempVec.size() != tempSet.size()){
+                    return false;
+                }
+                tempVec.clear();
+                tempSet.clear();
             }
         }
 
-        return validity;
+        return true;
     }
 };
